@@ -1,11 +1,10 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from schema import TodoItem
 
 app = FastAPI(title='Todo API', version='1.0', description='A simple TODO API')
 
-class TodoItem(BaseModel):
-    title: str
-    description: str
+
+
 
 
 @app.get("/todo/{item_id}", tags=["todo item"])
