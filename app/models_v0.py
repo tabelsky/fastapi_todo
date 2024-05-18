@@ -16,7 +16,6 @@ engine = create_async_engine(
 
 Session = async_sessionmaker(bind=engine, expire_on_commit=False)
 
-Role = Literal["admin", "user", "moderator"]
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -31,13 +30,13 @@ class User(Base):
         String(50), unique=True, index=True, nullable=False
     )
     password: Mapped[str] = mapped_column(String(70), nullable=False)
+    registration_time: Mapped[datetime.datetime] = mapped_column(DateTime, server_default=func.now())
     tokens: Mapped[List["Token"]] = relationship(
         "Token", back_populates="user", cascade="all, delete-orphan", lazy="joined"
     )
     todos: Mapped[List["Todo"]] = relationship(
         "Todo", back_populates="user", cascade="all, delete-orphan", lazy="selectin"
     )
-    role: Mapped[Role]
 
     @property
     def dict(self):
